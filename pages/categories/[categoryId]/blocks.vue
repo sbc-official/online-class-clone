@@ -23,6 +23,7 @@
               :key="block.id"
               :dot-color="block.completed ? '#4CAF50' : '#bdbdbd'"
               size="small"
+              :data-block-id="block.id"
             >
               <div class="block-card">
                 <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">

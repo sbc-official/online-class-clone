@@ -48,7 +48,7 @@
         />
 
         <div style="text-align:right;margin-bottom:16px">
-          <a href="#" style="font-size:12px;color:#1867C0;text-decoration:none">パスワードをお忘れですか？</a>
+          <a href="#" style="font-size:12px;color:#1867C0;text-decoration:none" @click.prevent="forgotPassword">パスワードをお忘れですか？</a>
         </div>
 
         <v-btn
@@ -78,7 +78,11 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
 
-const { login, DEFAULT_COURSE_ID } = useStore()
+const { login, showSnackbar, DEFAULT_COURSE_ID } = useStore()
+
+function forgotPassword() {
+  showSnackbar('パスワードリセットのメールを送信しました（デモ）', 'info')
+}
 
 const email = ref('')
 const password = ref('')

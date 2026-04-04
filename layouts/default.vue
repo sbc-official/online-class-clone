@@ -28,7 +28,7 @@
         オンラインクラス
       </v-toolbar-title>
       <v-spacer />
-      <v-btn variant="outlined" size="small" class="mr-3" style="font-size:13px">
+      <v-btn variant="outlined" size="small" class="mr-3" style="font-size:13px" @click="showSnackbar('お問い合わせは公式LINEからお願いします', 'info')">
         <v-icon start size="16">mdi-help-circle-outline</v-icon>
         お問い合わせ
       </v-btn>
@@ -110,7 +110,7 @@ import { useDisplay } from 'vuetify'
 
 const { mobile } = useDisplay()
 const drawer = ref(!mobile.value)
-const { user, isLoggedIn, organizations, currentCourse, snackbar, logout, switchCourse, DEFAULT_COURSE_ID } = useStore()
+const { user, isLoggedIn, organizations, currentCourse, snackbar, logout, switchCourse, showSnackbar, DEFAULT_COURSE_ID } = useStore()
 
 watch(mobile, (val) => {
   drawer.value = !val
