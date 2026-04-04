@@ -8,7 +8,7 @@
       :timeout="3000"
     >
       <div style="display:flex;align-items:center;gap:8px">
-        <v-icon size="18">{{ snackbar.color === 'success' ? 'mdi-check-circle' : 'mdi-alert-circle' }}</v-icon>
+        <v-icon size="18">{{ snackbar.color === 'success' ? 'mdi-check-circle' : snackbar.color === 'error' ? 'mdi-alert-circle' : 'mdi-information' }}</v-icon>
         {{ snackbar.text }}
       </div>
       <template v-slot:actions>
@@ -23,7 +23,7 @@
       <v-app-bar-nav-icon class="d-md-none" @click="drawer = !drawer" />
       <v-toolbar-title
         style="font-size:16px;font-weight:600;color:rgba(0,0,0,0.87);cursor:pointer"
-        @click="navigateTo('/courses/okzM4EDI6MGb')"
+        @click="navigateTo(`/courses/${DEFAULT_COURSE_ID}`)"
       >
         オンラインクラス
       </v-toolbar-title>
@@ -32,15 +32,34 @@
         <v-icon start size="16">mdi-help-circle-outline</v-icon>
         お問い合わせ
       </v-btn>
-      <v-avatar
-        v-if="isLoggedIn"
-        size="36"
-        color="#1867C0"
-        class="mr-2"
-        style="cursor:pointer"
-      >
-        <span style="color:white;font-size:14px;font-weight:500">{{ user?.initial }}</span>
-      </v-avatar>
+
+      <!-- User Menu -->
+      <v-menu v-if="isLoggedIn" offset-y>
+        <template v-slot:activator="{ props }">
+          <v-avatar
+            v-bind="props"
+            size="36"
+            color="#1867C0"
+            class="mr-2"
+            style="cursor:pointer"
+          >
+            <span style="color:white;font-size:14px;font-weight:500">{{ user?.initial }}</span>
+          </v-avatar>
+        </template>
+        <v-list density="compact" style="min-width:180px">
+          <v-list-item style="pointer-events:none">
+            <v-list-item-title style="font-size:13px;font-weight:500">{{ user?.name }}</v-list-item-title>
+            <v-list-item-subtitle style="font-size:11px">{{ user?.email }}</v-list-item-subtitle>
+          </v-list-item>
+          <v-divider />
+          <v-list-item @click="handleLogout" style="color:#B00020">
+            <template v-slot:prepend>
+              <v-icon size="18" color="#B00020">mdi-logout</v-icon>
+            </template>
+            <v-list-item-title style="font-size:13px">ログアウト</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <!-- Sidebar -->
@@ -91,7 +110,7 @@ import { useDisplay } from 'vuetify'
 
 const { mobile } = useDisplay()
 const drawer = ref(!mobile.value)
-const { user, isLoggedIn, organizations, currentCourse, snackbar } = useStore()
+const { user, isLoggedIn, organizations, currentCourse, snackbar, logout, switchCourse, DEFAULT_COURSE_ID } = useStore()
 
 watch(mobile, (val) => {
   drawer.value = !val
@@ -99,6 +118,12 @@ watch(mobile, (val) => {
 
 function goToCourse(courseId: string) {
   if (mobile.value) drawer.value = false
+  switchCourse(courseId)
   navigateTo(`/courses/${courseId}`)
+}
+
+function handleLogout() {
+  logout()
+  navigateTo('/sign_in')
 }
 </script>

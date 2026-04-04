@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const { isLoggedIn } = useStore()
+const { isLoggedIn, DEFAULT_COURSE_ID } = useStore()
 
 onMounted(() => {
   if (isLoggedIn.value) {
-    navigateTo('/courses/okzM4EDI6MGb')
+    navigateTo(`/courses/${DEFAULT_COURSE_ID}`)
   } else {
     navigateTo('/sign_in')
   }

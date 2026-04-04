@@ -125,6 +125,18 @@ body {
   text-align: center;
 }
 
+.status-chip.status-complete {
+  color: #2E7D32;
+  background: #E8F5E9;
+  border-color: #A5D6A7;
+}
+
+.status-chip.status-progress {
+  color: #1565C0;
+  background: #E3F2FD;
+  border-color: #90CAF9;
+}
+
 /* Progress Section */
 .progress-section {
   display: flex;
@@ -164,7 +176,7 @@ body {
 
 /* Video Player */
 .video-placeholder {
-  background: #1a2538;
+  background: linear-gradient(135deg, #0f1923 0%, #1a2538 50%, #0d1520 100%);
   border-radius: 8px;
   aspect-ratio: 16/9;
   display: flex;
@@ -173,6 +185,34 @@ body {
   margin-bottom: 16px;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+
+.video-placeholder:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.video-placeholder.video-playing {
+  background: linear-gradient(135deg, #0a1118 0%, #111d2b 50%, #0a1118 100%);
+}
+
+.video-controls-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+
+.video-controls-overlay.is-playing {
+  opacity: 0;
+}
+
+.video-controls-overlay.is-playing:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .play-btn {
@@ -199,6 +239,51 @@ body {
   font-size: 28px;
 }
 
+.video-duration-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 500;
+}
+
+.video-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+}
+
+.video-progress-fill {
+  height: 100%;
+  background: #1867C0;
+  transition: width 0.5s linear;
+  border-radius: 0 2px 2px 0;
+}
+
+.video-playing-indicator {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.video-elapsed,
+.video-total {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  font-variant-numeric: tabular-nums;
+}
+
 /* AI Question Section */
 .ai-question-section {
   background: #f8f9fa;
@@ -221,6 +306,64 @@ body {
   font-size: 12px;
   color: rgba(0, 0, 0, 0.55);
   line-height: 1.6;
+}
+
+/* AI Chat */
+.ai-chat-msg {
+  display: flex;
+  margin-bottom: 12px;
+}
+
+.ai-chat-msg.user {
+  justify-content: flex-end;
+}
+
+.ai-chat-msg.assistant {
+  justify-content: flex-start;
+}
+
+.ai-chat-bubble {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.ai-chat-msg.user .ai-chat-bubble {
+  background: #1867C0;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.ai-chat-msg.assistant .ai-chat-bubble {
+  background: #f0f0f0;
+  color: rgba(0, 0, 0, 0.8);
+  border-bottom-left-radius: 4px;
+}
+
+.ai-typing {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 12px 18px;
+}
+
+.ai-typing .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  animation: aiDot 1.4s infinite ease-in-out both;
+}
+
+.ai-typing .dot:nth-child(1) { animation-delay: -0.32s; }
+.ai-typing .dot:nth-child(2) { animation-delay: -0.16s; }
+.ai-typing .dot:nth-child(3) { animation-delay: 0s; }
+
+@keyframes aiDot {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
 }
 
 /* Bottom Navigation */
@@ -307,6 +450,159 @@ body {
   margin-bottom: 12px;
 }
 
+/* Study Plan */
+.study-plan-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.study-plan-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.study-plan-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.study-plan-item.completed {
+  opacity: 0.7;
+}
+
+.study-plan-item.current {
+  background: #E3F2FD;
+}
+
+.study-plan-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+}
+
+.study-plan-item.completed .study-plan-num {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.study-plan-item.current .study-plan-num {
+  background: #1867C0;
+  color: white;
+}
+
+.study-plan-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.study-plan-name {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.study-plan-blocks {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
+  margin-top: 2px;
+}
+
+/* Reviews */
+.review-card {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.review-card:last-child {
+  border-bottom: none;
+}
+
+.review-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.review-category {
+  font-size: 11px;
+  color: #1867C0;
+  background: #E3F2FD;
+  padding: 1px 8px;
+  border-radius: 3px;
+}
+
+.review-date {
+  font-size: 11px;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.review-block-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.8);
+  margin-bottom: 4px;
+}
+
+.review-text {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.6);
+  line-height: 1.6;
+}
+
+/* Bookmarks */
+.bookmark-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.bookmark-card:last-child {
+  border-bottom: none;
+}
+
+/* Progress Detail */
+.progress-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.progress-detail-row:last-child {
+  border-bottom: none;
+}
+
+.progress-detail-name {
+  flex: 1;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Mobile */
 @media (max-width: 960px) {
   .category-table-header,
@@ -338,6 +634,19 @@ body {
     display: flex !important;
     gap: 12px;
     margin-top: 4px;
+  }
+
+  .bottom-nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .study-plan-name {
+    font-size: 12px;
+  }
+
+  .progress-detail-name {
+    font-size: 12px;
   }
 }
 

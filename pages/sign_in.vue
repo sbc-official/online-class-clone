@@ -6,6 +6,20 @@
         <div style="font-size:13px;color:rgba(0,0,0,0.5);margin-top:4px">ログインしてください</div>
       </div>
 
+      <!-- Login error alert -->
+      <v-alert
+        v-if="loginError"
+        type="error"
+        variant="tonal"
+        density="compact"
+        class="mb-4"
+        style="font-size:13px"
+        closable
+        @click:close="loginError = ''"
+      >
+        {{ loginError }}
+      </v-alert>
+
       <v-form @submit.prevent="handleLogin">
         <v-text-field
           v-model="email"
@@ -16,6 +30,7 @@
           class="mb-3"
           :error-messages="errors.email"
           prepend-inner-icon="mdi-email-outline"
+          @input="clearErrors"
         />
 
         <v-text-field
@@ -24,12 +39,17 @@
           :type="showPassword ? 'text' : 'password'"
           variant="outlined"
           density="compact"
-          class="mb-4"
+          class="mb-1"
           :error-messages="errors.password"
           prepend-inner-icon="mdi-lock-outline"
           :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
           @click:append-inner="showPassword = !showPassword"
+          @input="clearErrors"
         />
+
+        <div style="text-align:right;margin-bottom:16px">
+          <a href="#" style="font-size:12px;color:#1867C0;text-decoration:none">パスワードをお忘れですか？</a>
+        </div>
 
         <v-btn
           type="submit"
@@ -42,6 +62,15 @@
           ログインする
         </v-btn>
       </v-form>
+
+      <!-- Demo credentials hint -->
+      <div style="margin-top:20px;padding:12px;background:#f5f5f5;border-radius:6px">
+        <div style="font-size:11px;color:rgba(0,0,0,0.5);margin-bottom:6px">デモアカウント</div>
+        <div style="font-size:12px;color:rgba(0,0,0,0.6)">
+          <strong>Email:</strong> test@example.com<br>
+          <strong>Pass:</strong> test1234
+        </div>
+      </div>
     </v-card>
   </div>
 </template>
@@ -49,16 +78,23 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'auth' })
 
-const { login } = useStore()
+const { login, DEFAULT_COURSE_ID } = useStore()
 
 const email = ref('')
 const password = ref('')
 const showPassword = ref(false)
 const loading = ref(false)
+const loginError = ref('')
 const errors = ref({ email: '', password: '' })
+
+function clearErrors() {
+  loginError.value = ''
+  errors.value = { email: '', password: '' }
+}
 
 async function handleLogin() {
   errors.value = { email: '', password: '' }
+  loginError.value = ''
 
   if (!email.value) {
     errors.value.email = 'メールアドレスを入力してください'
@@ -72,12 +108,14 @@ async function handleLogin() {
   loading.value = true
   await new Promise(r => setTimeout(r, 800))
 
-  const success = login(email.value, password.value)
+  const result = login(email.value, password.value)
   loading.value = false
 
-  if (success) {
+  if (result.success) {
     const redirect = useRoute().query.redirect as string
-    navigateTo(redirect || '/courses/okzM4EDI6MGb')
+    navigateTo(redirect || `/courses/${DEFAULT_COURSE_ID}`)
+  } else {
+    loginError.value = result.error || 'ログインに失敗しました'
   }
 }
 </script>
